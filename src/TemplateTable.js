@@ -151,7 +151,6 @@ export default function BasicTable() {
         setIsOpenModalExpectedRevenue(true);
     };
 
-
     return (
         <>
             <div style={{ height: "100vh", backgroundColor: "rgb(174 187 75 / 10%)", position: "relative", width: "100%" }}>
@@ -166,7 +165,7 @@ export default function BasicTable() {
                         Footer
                     </div>
                 </div>
-                <div style={{
+                {/* <div style={{
                     width: "100%",
                     display: "flex",
                     justifyContent: "center",
@@ -177,16 +176,17 @@ export default function BasicTable() {
                     <div style={{ width: "100%", backgroundColor: "gray" }}>
                         Khoảng cách giữa 2 component
                     </div>
-                </div>
+                </div> */}
                 <div style={{
                     width: "100%",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "blue",
-                    height: "15vh"
+                    // backgroundColor: "blue",
+                    height: "15vh",
+                    marginTop: "20px",
                 }}>
-                    <div style={{ width: "98%", backgroundColor: "#fff", height: "100%", borderRadius: "10px" }}>
+                    <div style={{ width: "98%", backgroundColor: "rgb(98 150 181 / 55%)", height: "100%", borderRadius: "10px" }}>
                         <h1 style={{ margin: 0, textAlign: "center" }}>Tên dự án</h1>
                         <Row style={{
                             display: "flex",
@@ -206,8 +206,6 @@ export default function BasicTable() {
                             </Col>
                             <Col span={2}></Col>
                         </Row>
-
-
                     </div>
                 </div>
                 <Row style={{ width: "99%" }}>
@@ -231,7 +229,7 @@ export default function BasicTable() {
                         </Dropdown>
                     </Col>
                     <Col span={8} >
-                        <Button style={{ float: "right", top: "20%", backgroundColor: "#1677ff", color: "#fff", fontWeight: 500 }} onClick={() => setIsOpenModalExpectedRevenue(true)}>
+                        <Button style={{ float: "right", top: "20%", backgroundColor: "#1677ff", color: "#fff", fontWeight: 500 }} onClick={showModal}>
                             <Space>
                                 Doanh thu dự kiến
                             </Space>
