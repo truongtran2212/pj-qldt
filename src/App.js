@@ -1,13 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
 import Detail from './Detail';
-import EnhancedTable from './TemplateTable';
+import TemplateTable from './TemplateTable';
+import InputFile from './Input';
+import TestPDF from './TestPDF';
 
 function App() {
   return (
     <>
       {/* <Detail /> */}
-      <EnhancedTable />
+      {/* <TemplateTable /> */}
+      {/* <InputFile /> */}
+      <TestPDF />
     </>
   );
 }

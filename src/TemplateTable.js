@@ -152,7 +152,7 @@ export default function BasicTable() {
                     height: "10vh"
                 }}>
                     <div style={{ width: "100%", backgroundColor: "#fff", height: "100%" }}>
-                        Footer
+                        Header
                     </div>
                 </div>
                 {/* <div style={{
@@ -290,8 +290,6 @@ export default function BasicTable() {
                                         <StyledTableCell align="left">{data.tien}</StyledTableCell>
                                         <StyledTableCell align="left">{data.tien}</StyledTableCell>
                                         <StyledTableCell align="left">{data.tien}</StyledTableCell>
-
-
                                         <StyledTableCell align="center"><FontAwesomeIcon style={{ fontSize: 22, cursor: "pointer" }} icon={faFileSignature} /></StyledTableCell>
                                     </StyledTableRow>
                                 ))}
