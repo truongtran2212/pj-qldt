@@ -10,13 +10,15 @@ import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { faFileSignature } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Col, Dropdown, Modal, Row } from 'antd';
+import { Button, Col, Dropdown, Modal, Row, Select } from 'antd';
 import { DatePicker, Space } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import "./Detail.css"
 
+const { Option } = Select;
+
 const headerName = [
-    "", "Tiền", "Link File Saoke", "Link File tính tiền", "Comment", "Ngày chuyển tiền", "Thao tác", "Expected Revenue", "Revenue Excluding Tax", "Tax", "Total Revenue"
+    "", "Tiền", "Link File Saoke", "Link File tính tiền", "Comment", "Ngày chuyển tiền", "Expected Revenue", "Revenue Excluding Tax", "Tax", "Total Revenue", "Thao tác"
 ]
 
 const mockData = [
@@ -126,29 +128,17 @@ export default function BasicTable() {
     }));
 
     const items = [
-        {
-            label: 'Actual',
-            key: '1',
-        },
-        {
-            label: 'Forecast',
-            key: '2',
-        },
+        "All", "Actual", "Forecast"
     ];
-
-    const handleMenuClick = (e) => {
-        console.log('click', e);
-    };
-
-    const menuProps = {
-        items,
-        onClick: handleMenuClick,
-    };
 
 
     const [isOpenModalExpectedRevenue, setIsOpenModalExpectedRevenue] = React.useState(false);
     const showModal = () => {
         setIsOpenModalExpectedRevenue(true);
+    };
+
+    const handleChangeDealStage = (value) => {
+        console.log(`selected ${value}`);
     };
 
     return (
@@ -161,7 +151,7 @@ export default function BasicTable() {
                     alignItems: "center",
                     height: "10vh"
                 }}>
-                    <div style={{ width: "100%", backgroundColor: "#fff" }}>
+                    <div style={{ width: "100%", backgroundColor: "#fff", height: "100%" }}>
                         Footer
                     </div>
                 </div>
@@ -183,28 +173,47 @@ export default function BasicTable() {
                     justifyContent: "center",
                     alignItems: "center",
                     // backgroundColor: "blue",
-                    height: "15vh",
+                    height: "18vh",
                     marginTop: "20px",
                 }}>
-                    <div style={{ width: "98%", backgroundColor: "rgb(98 150 181 / 55%)", height: "100%", borderRadius: "10px" }}>
+                    <div className='information'>
                         <h1 style={{ margin: 0, textAlign: "center" }}>Tên dự án</h1>
                         <Row style={{
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
+                            marginTop: "10px",
                         }}>
-                            <Col span={2}></Col>
-                            <Col span={10}>
-                                <p>Currentcy: VND</p>
-                                <p>Market: Viet Nam</p>
-                                <p> Client Code: TruongTX</p>
+                            <Col span={8} className='center-col'><div className='center-div'><p>Currency: VND</p></div></Col>
+                            <Col span={8} className='center-col'>
+                                <div className='center-div'>
+                                    <p>Market: Viet Nam</p>
+                                </div>
                             </Col>
-                            <Col span={10}>
-                                <p>PD service: Ví dụ</p>
-                                <p>Bank account: Chưa biết</p>
-                                <p>Deal owner: Chưa biết</p>
+                            <Col span={8} className='center-col'>
+                                <div className='center-div'>
+                                    <p> Client Code: TruongTX</p>
+                                </div>
                             </Col>
-                            <Col span={2}></Col>
+                        </Row>
+                        <Row style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginTop: "15px",
+                        }}>
+                            <Col span={8} className='center-col'>
+                                <div className='center-div'><p>PD service: Ví dụ</p></div></Col>
+                            <Col span={8} className='center-col'>
+                                <div className='center-div'>
+                                    <p>Bank account: Chưa biết</p>
+                                </div>
+                            </Col>
+                            <Col span={8} className='center-col'>
+                                <div className='center-div'>
+                                    <p>Deal owner: Chưa biết</p>
+                                </div>
+                            </Col>
                         </Row>
                     </div>
                 </div>
@@ -219,14 +228,25 @@ export default function BasicTable() {
                         <Space direction="vertical">
                             <DatePicker style={{ width: 200 }} onChange={onChange} allowClear={false} picker="year" />
                         </Space>
-                        <Dropdown menu={menuProps} trigger={['click']}>
-                            <Button style={{ marginLeft: "20px", width: 150 }}>
-                                <Space>
-                                    Deal Stage
-                                    <DownOutlined />
-                                </Space>
-                            </Button>
-                        </Dropdown>
+                        <Select
+                            placeholder="Chọn Deal Stage"
+                            style={{
+                                width: 150,
+                                marginLeft: 20,
+                            }}
+                            key="type_document1"
+                            allowClear
+                            maxTagCount="responsive"
+                            optionFilterProp="children"
+                        // optionLabelProp="data-label"
+                        // getPopupContainer={getPopupContainer}
+                        >
+                            {items.map((item, index) => (
+                                <Option key={index} value={item}>
+                                    {item}
+                                </Option>
+                            ))}
+                        </Select>
                     </Col>
                     <Col span={8} >
                         <Button style={{ float: "right", top: "20%", backgroundColor: "#1677ff", color: "#fff", fontWeight: 500 }} onClick={showModal}>
@@ -263,13 +283,15 @@ export default function BasicTable() {
                                         </StyledTableCell>
                                         <StyledTableCell align="left">{data.tien}</StyledTableCell>
                                         <StyledTableCell align="left"><a href={data.link}>{data.link}</a></StyledTableCell>
-                                        <StyledTableCell align="left">{data.comment}</StyledTableCell>
-                                        <StyledTableCell align="left">{data.date}</StyledTableCell>
-                                        <StyledTableCell align="left">{data.date}</StyledTableCell>
-                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
                                         <StyledTableCell align="left"><a href={data.link}>{data.link}</a></StyledTableCell>
                                         <StyledTableCell align="left">{data.comment}</StyledTableCell>
                                         <StyledTableCell align="left">{data.date}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
+
+
                                         <StyledTableCell align="center"><FontAwesomeIcon style={{ fontSize: 22, cursor: "pointer" }} icon={faFileSignature} /></StyledTableCell>
                                     </StyledTableRow>
                                 ))}
