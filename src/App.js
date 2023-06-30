@@ -4,6 +4,7 @@ import Detail from './Detail';
 import TemplateTable from './TemplateTable';
 import InputFile from './Input';
 import TestPDF from './TestPDF';
+import PreviewPDF from './PreviewPDF';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       {/* <Detail /> */}
       {/* <TemplateTable /> */}
       {/* <InputFile /> */}
+      {/* <PreviewPDF /> */}
       <TestPDF />
     </>
   );

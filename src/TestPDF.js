@@ -6,14 +6,22 @@ import {
 } from "@ant-design/icons";
 import Dragger from 'antd/es/upload/Dragger';
 import ReactImageMagnify from 'react-image-magnify';
-import { pdfjs } from 'react-pdf';
+import pdfjs from "pdfjs-dist";
+const { createCanvas } = require('canvas');
+// import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+
+// pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/build/pdf.worker.js';
+
+const pdfjsLib = window.pdfjsLib;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
 const TestPDF = () => {
     const [fileList, setFileList] = useState([]);
     const [previewImage, setPreviewImage] = useState("");
     const [images, setImages] = useState([]);
     const [imagesURL, setImagesURL] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [numPages, setNumPages] = useState();
+    const [numPagesPDF, setNumPagesPDF] = useState();
     const [loading, setLoading] = useState(false);
     const handleChangeUpload = (e) => {
         console.log(e)
@@ -21,6 +29,7 @@ const TestPDF = () => {
         setFileList(fileList);
         setPreviewImage(URL.createObjectURL(fileList[0].originFileObj));
         if (fileList[0].type === "application/pdf") {
+            console.log("Vào đây")
             convertPDFToImages(
                 URL.createObjectURL(fileList[0].originFileObj),
                 fileList
@@ -29,7 +38,7 @@ const TestPDF = () => {
             var lsImageUpload = fileList.map((item) => item.originFileObj);
             setImages(lsImageUpload);
             setImagesURL([URL.createObjectURL(fileList[0].originFileObj)]);
-            setNumPages(lsImageUpload.length);
+            setNumPagesPDF(lsImageUpload.length);
         }
         // setDataBill();
         setFileList([]);
@@ -48,45 +57,65 @@ const TestPDF = () => {
         return new File([u8arr], fileName, { type: mime });
     }
 
+    //Trường hợp 1: Đây mới là đang làm trường hợp mỗi file PDF chỉ có 1 ảnh ("Đã xử lý")
+    //Trường hợp 2: 1 File PDF có nhiều ảnh ở trong
+    // Từng ảnh sẽ có nhiều URL
+    //     + Bây giờ phải map() URL của ảnh ra để hiển thị từng ảnh
+    // 
+    // Việc ràng buộc người dùng chỉ nên Up 1 File duy nhất HAY sẽ Up được nhiều File
+    //      + Nếu Up nhiều File thì phải xử lý số lượng Page của từng File
+
     const convertPDFToImages = async (pdfUrl, fileList) => {
-        console.log("Vào đây mới lỗi")
-        
-        setLoading(true);
-        const pdf = await pdfjs.getDocument(pdfUrl).promise;
-        console.log(pdf)
-        const totalNumPages = pdf.numPages;
-        setNumPages(totalNumPages);
-        const pageImages = [];
-        const pageImagesURL = [];
-        console.log("Vào đây mới lỗi 123")
-        for (let i = 1; i <= totalNumPages; i++) {
-            const page = await pdf.getPage(i);
-            const viewport = page.getViewport({ scale: 1.0 });
-            const canvas = document.createElement("canvas");
-            const canvasContext = canvas.getContext("2d");
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            const renderContext = {
-                canvasContext,
-                viewport,
-            };
-            await page.render(renderContext).promise;
-            const imageData = canvas.toDataURL("image/png");
-            const convert_base64tofileimg = dataURLtoFile(
-                imageData,
-                `page_${i}__.png`
-            );
-            // const convert_base64tofileimg = dataURLtoFile(
-            //   imageData,
-            //   `page_${i}__` +
-            //     images[0].name.replace(images[0].name.match(/\.([^.]+)$/)[1], "png")
-            // );
-            pageImages.push(convert_base64tofileimg);
-            pageImagesURL.push(URL.createObjectURL(convert_base64tofileimg));
+        try {
+            // Tạo đối tượng PDF từ dữ liệu PDF
+            const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+
+            // Lấy số trang của PDF
+            const numPages = pdf.numPages;
+
+            // Mảng chứa hình ảnh
+            const images = [];
+            const pageImagesURL = [];
+            // Duyệt qua từng trang PDF
+            for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+                // Lấy trang PDF
+                const page = await pdf.getPage(pageNumber);
+
+                // Lấy kích thước của trang
+                const viewport = page.getViewport({ scale: 1 });
+
+                // Tạo canvas để vẽ trang PDF
+                const canvas = createCanvas(viewport.width, viewport.height);
+                const context = canvas.getContext('2d');
+
+                // Render trang PDF lên canvas
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport,
+                }).promise;
+
+                // Convert canvas thành hình ảnh dưới dạng URL
+                const imageDataURL = canvas.toDataURL('image/png');
+                const convert_base64tofileimg = dataURLtoFile(
+                    imageDataURL,
+                    `page_${pageNumber}__.png`
+                );
+                // Thêm hình ảnh vào mảng
+                images.push(convert_base64tofileimg);
+                pageImagesURL.push(URL.createObjectURL(convert_base64tofileimg));
+            }
+            setImages(images);
+            setImagesURL(pageImagesURL);
+            setLoading(false);
+            // Trả về mảng hình ảnh
+            console.log(numPages)
+            setNumPagesPDF(numPages)
+            return images;
+        } catch (error) {
+            console.error('Lỗi chuyển đổi PDF thành hình ảnh:', error);
+            return [];
         }
-        setImages(pageImages);
-        setImagesURL(pageImagesURL);
-        setLoading(false);
+
     };
 
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -101,13 +130,14 @@ const TestPDF = () => {
     };
 
     const handleNextPage = () => {
-        if (currentPage < numPages) {
+        if (currentPage < numPagesPDF) {
             setCurrentPage(currentPage + 1);
         }
     };
     return (
         <>
-            <div style={{ textAlign: "center", height: "100%" }}>
+            {console.log(images)}
+            <div style={{ textAlign: "center", height: "100%", display: "flex" }}>
                 <Row style={{ height: "100%" }}>
                     <Col
                         span={9}
@@ -135,70 +165,66 @@ const TestPDF = () => {
                                     preview={false}
                                     src="https://media.istockphoto.com/id/1392182937/fr/vectoriel/aucune-image-disponible-photo-%C3%A0-venir.jpg?s=612x612&w=0&k=20&c=iJ7Bhi7QRKOmrAFq36r7WOz8B-a5BIj_Fn2iFEgGB8M="
                                 ></Image>
-                            ) : images[0].type === "application/pdf" ? (
+                            ) :
                                 <>
                                     <div style={{ height: 700 }}>
                                         {imagesURL.length > 0 && (
-                                            <ReactImageMagnify
-                                                {...{
-                                                    smallImage: {
-                                                        isFluidWidth: false,
-                                                        src: imagesURL[currentPage - 1],
-                                                        width: 400,
-                                                        height: 500,
-                                                    },
-                                                    largeImage: {
-                                                        src: imagesURL[currentPage - 1],
-                                                        width: 1200,
-                                                        height: 1800,
-                                                    },
-                                                }}
-                                            />
+                                            <Image
+                                                // onClick={
+                                                //     userName !== "" && passWord !== ""
+                                                //         ? setError(false)
+                                                //         : checkUser
+                                                // }
+                                                preview={false}
+                                                src={imagesURL[currentPage - 1]}
+                                            ></Image>
                                         )}
                                     </div>
                                 </>
-                            ) : null}
+                            }
                         </Dragger>
                     </Col>
-                    <Col span={2}>
-                        {numPages && (
-                            <p
-                                style={{
-                                    alignItems: "center",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                {imagesURL.length > 0 ? (
-                                    <>
-                                        <Tooltip placement="topLeft" title="Previous">
-                                            <Button
-                                                type="primary"
-                                                shape="round"
-                                                icon={<VerticalRightOutlined />}
-                                                size="small"
-                                                onClick={handlePreviousPage}
-                                                disabled={currentPage === 1}
-                                            />
-                                        </Tooltip>
-                                        &nbsp;&nbsp; {currentPage}/{numPages} &nbsp;&nbsp;
-                                        <Tooltip placement="topLeft" title="Next">
-                                            <Button
-                                                type="primary"
-                                                shape="round"
-                                                icon={<VerticalLeftOutlined />}
-                                                size="small"
-                                                onClick={handleNextPage}
-                                                disabled={currentPage === numPages}
-                                            />
-                                        </Tooltip>
-                                    </>
-                                ) : null}
-                            </p>
-                        )}
-                    </Col>
+                </Row>
+                <Row>
+                    {numPagesPDF && (
+                        <p
+                            style={{
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                        >
+                            {imagesURL.length > 0 ? (
+                                <>
+                                    <Tooltip placement="topLeft" title="Previous">
+                                        <Button
+                                            type="primary"
+                                            shape="round"
+                                            icon={<VerticalRightOutlined />}
+                                            size="small"
+                                            onClick={handlePreviousPage}
+                                            disabled={currentPage === 1}
+                                        />
+                                    </Tooltip>
+                                    &nbsp;&nbsp; {currentPage}/{numPagesPDF} &nbsp;&nbsp;
+                                    <Tooltip placement="topLeft" title="Next">
+                                        <Button
+                                            type="primary"
+                                            shape="round"
+                                            icon={<VerticalLeftOutlined />}
+                                            size="small"
+                                            onClick={handleNextPage}
+                                            disabled={currentPage === numPagesPDF}
+                                        />
+                                    </Tooltip>
+                                </>
+                            ) : null}
+                        </p>
+                    )}
                 </Row>
             </div>
+
+
         </>
     );
 };

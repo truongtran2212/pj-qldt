@@ -18,7 +18,7 @@ import "./Detail.css"
 const { Option } = Select;
 
 const headerName = [
-    "", "Tiền", "Link File Saoke", "Link File tính tiền", "Comment", "Ngày chuyển tiền", "Expected Revenue", "Revenue Excluding Tax", "Tax", "Total Revenue", "Thao tác"
+    "", "Tiền", "Link File Saoke", "Link File tính tiền", "Comment", "Ngày chuyển tiền", "Expected Revenue", "Revenue Excluding Tax", "Tax", "Total Revenue", "Expected Revenue VND", "Revenue Excluding Tax VND", "Tax VND", "Total Revenue VND", "Thao tác"
 ]
 
 const mockData = [
@@ -107,13 +107,13 @@ export default function BasicTable() {
             color: "#2b3245",
             fontWeight: 600,
             padding: 10,
-
             fontSize: 14,
+            minWidth: 200,
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
             padding: 10,
-
+            minWidth: 150,
         },
     }));
 
@@ -286,6 +286,10 @@ export default function BasicTable() {
                                         <StyledTableCell align="left"><a href={data.link}>{data.link}</a></StyledTableCell>
                                         <StyledTableCell align="left">{data.comment}</StyledTableCell>
                                         <StyledTableCell align="left">{data.date}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
+                                        <StyledTableCell align="left">{data.tien}</StyledTableCell>
                                         <StyledTableCell align="left">{data.tien}</StyledTableCell>
                                         <StyledTableCell align="left">{data.tien}</StyledTableCell>
                                         <StyledTableCell align="left">{data.tien}</StyledTableCell>
