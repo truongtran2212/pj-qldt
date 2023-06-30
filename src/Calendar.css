@@ -1,0 +1,137 @@
+.calendar {
+  position: relative;
+  margin: auto;
+  width: 70vw;
+  height: 70vw;
+}
+
+.base {
+  width: 70%;
+  height: 45%;
+  border-radius: 2vw;
+  box-shadow: 0.2vw 0.2vw 1vw 0 rgba(0, 0, 0, 0.27);
+  overflow: hidden;
+}
+.base.top {
+  position: absolute;
+  top: 5%;
+  left: 15%;
+  background-color: #29335c;
+}
+.base.top .holes {
+  position: absolute;
+  top: 88%;
+  left: 4%;
+}
+.base.bottom {
+  position: absolute;
+  top: 51%;
+  left: 15%;
+  background-color: #fff;
+}
+.base.bottom .holes {
+  position: absolute;
+  top: 4%;
+  left: 4%;
+}
+.base.bottom::before {
+  content: " ";
+  display: block;
+  width: 100%;
+  height: 28%;
+  background-color: #29335c;
+}
+
+.holes {
+  width: 128.5714285714%;
+  height: 200%;
+}
+.holes .hole {
+  background-color: #669bbc;
+  width: 4%;
+  height: 4%;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 3.8vw;
+  box-shadow: inset 0.2vw 0.2vw 1vw 0 rgba(0, 0, 0, 0.27);
+}
+
+.rings {
+  width: 70%;
+  height: 10%;
+  position: absolute;
+  top: 45.5%;
+  left: 17.3%;
+}
+.rings .ring {
+  width: 3.5%;
+  height: 100%;
+  display: inline-block;
+  background-color: white;
+  margin-left: 4.6vw;
+  border-radius: 70%/10%;
+  box-shadow: 0.3vw 0 0.5vw -0.2vw rgba(0, 0, 0, 0.27);
+}
+
+.year-side {
+  background-color: #f3a712;
+  width: 20%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+}
+.year-side::after {
+  content: "2017";
+  display: block;
+  color: #29335c;
+  font-family: Roboto, sans-serif;
+  font-size: 7vw;
+  transform: rotate(-90deg);
+  position: absolute;
+  top: 35%;
+  left: -30%;
+}
+
+.month-side {
+  width: 80%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 20%;
+}
+.month-side::after {
+  content: "MAY";
+  display: block;
+  color: #f3a712;
+  font-family: Roboto, sans-serif;
+  font-size: 8vw;
+  position: absolute;
+  top: 35%;
+  left: 25%;
+}
+
+.days {
+  width: 90%;
+  height: 75%;
+  position: absolute;
+  top: 15%;
+  left: 5%;
+  display: grid;
+  grid-template: repeat(6, 1fr) / repeat(7, 1fr);
+  grid-gap: 0.2vw;
+}
+.days > div {
+  text-align: center;
+  padding-top: 20%;
+  font-family: Roboto, sans-serif;
+  font-size: 1.8vw;
+  color: #29335c;
+}
+.days > div.old {
+  color: #999;
+}
+.days > div.weekday {
+  font-weight: bold;
+  color: #f3a712;
+}

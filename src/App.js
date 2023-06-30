@@ -5,6 +5,7 @@ import TemplateTable from './TemplateTable';
 import InputFile from './Input';
 import TestPDF from './TestPDF';
 import PreviewPDF from './PreviewPDF';
+import Calendar from './Calendar';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       {/* <TemplateTable /> */}
       {/* <InputFile /> */}
       {/* <PreviewPDF /> */}
+      {/* <Calendar /> */}
       <TestPDF />
     </>
   );

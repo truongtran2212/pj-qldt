@@ -1,5 +1,5 @@
-import { PlusOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons';
-import { Modal, Row, Upload, Col, Button, Image, Tooltip } from 'antd';
+import { LoadingOutlined, PlusOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons';
+import { Modal, Row, Upload, Col, Button, Image, Tooltip, Spin, Table, Space, DatePicker, Select } from 'antd';
 import { useState } from 'react';
 import {
     UploadOutlined,
@@ -14,6 +14,7 @@ const { createCanvas } = require('canvas');
 
 const pdfjsLib = window.pdfjsLib;
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+const { Option } = Select;
 
 const TestPDF = () => {
     const [fileList, setFileList] = useState([]);
@@ -68,6 +69,7 @@ const TestPDF = () => {
     const convertPDFToImages = async (pdfUrl, fileList) => {
         try {
             // Tạo đối tượng PDF từ dữ liệu PDF
+            setLoading(true)
             const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
 
             // Lấy số trang của PDF
@@ -134,94 +136,338 @@ const TestPDF = () => {
             setCurrentPage(currentPage + 1);
         }
     };
+    const antIcon = (
+        <LoadingOutlined
+            style={{
+                fontSize: 60,
+            }}
+            spin
+        />
+    );
+    const columns = [
+        {
+            title: 'Khách hàng',
+            dataIndex: 'name',
+            filters: [
+                {
+                    text: 'Joe',
+                    value: 'Joe',
+                },
+                {
+                    text: 'Jim',
+                    value: 'Jim',
+                },
+                {
+                    text: 'Category 2',
+                    value: 'Category 2',
+                },
+            ],
+            filterMode: 'tree',
+            filterSearch: true,
+            onFilter: (value, record) => record.name.startsWith(value),
+            width: '20%',
+        },
+        {
+            title: 'Dự án',
+            dataIndex: 'project',
+            // sorter: (a, b) => a.age - b.age,
+            width: '20%',
+        },
+        {
+            title: 'Tiền dự án',
+            dataIndex: 'address',
+            width: '10%',
+        },
+        {
+            title: 'Tiền trả',
+            dataIndex: 'address',
+            width: '10%',
+        },
+        {
+            title: 'Ngày chuyển',
+            dataIndex: 'date',
+            width: '20%',
+        },
+        {
+            title: 'Diễn giải',
+            dataIndex: 'description',
+            width: '40%',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'TruongTX',
+            project: 32,
+            address: 100000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '2',
+            name: 'LongLH',
+            project: 42,
+            address: 200000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '3',
+            name: 'VietHN',
+            project: 32,
+            address: 300000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '4',
+            name: 'KienDT',
+            project: 32,
+            address: 400000,
+            date: "23/12/2023 14:00:00",
+            description: "Đã thanh toán"
+        },
+        {
+            key: '1',
+            name: 'TruongTX',
+            project: 32,
+            address: 100000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '2',
+            name: 'LongLH',
+            project: 42,
+            address: 200000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '3',
+            name: 'VietHN',
+            project: 32,
+            address: 300000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '4',
+            name: 'KienDT',
+            project: 32,
+            address: 400000,
+            date: "23/12/2023 14:00:00",
+            description: "Đã thanh toán"
+        },
+        {
+            key: '1',
+            name: 'TruongTX',
+            project: 32,
+            address: 100000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '2',
+            name: 'LongLH',
+            project: 42,
+            address: 200000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '3',
+            name: 'VietHN',
+            project: 32,
+            address: 300000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '4',
+            name: 'KienDT',
+            project: 32,
+            address: 400000,
+            date: "23/12/2023 14:00:00",
+            description: "Đã thanh toán"
+        },
+        {
+            key: '1',
+            name: 'TruongTX',
+            project: 32,
+            address: 100000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '2',
+            name: 'LongLH',
+            project: 42,
+            address: 200000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '3',
+            name: 'VietHN',
+            project: 32,
+            address: 300000,
+            date: "23/12/2023 14:00:00",
+            description: "Khách đã trả đủ tiền"
+        },
+        {
+            key: '4',
+            name: 'KienDT',
+            project: 32,
+            address: 400000,
+            date: "23/12/2023 14:00:00",
+            description: "Đã thanh toán"
+        },
+    ];
+    const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+    };
+
+    const onChangeMonth = (date, dateString) => {
+        console.log(date, dateString);
+    };
+
+    const items = [
+        "VBPO Việt Nam", "VBPO Nhật Bản"
+    ];
+
     return (
         <>
-            {console.log(images)}
-            <div style={{ textAlign: "center", height: "100%", display: "flex" }}>
-                <Row style={{ height: "100%" }}>
-                    <Col
-                        span={9}
-                        className={"colImageCMND content-middle"}
-                        // style={{ marginRight: "1%" }}
-                        style={{ zIndex: 1 }}
-                    // }}
-                    // style={(rotateCMND % 180) === 90 ? { height: 670 } : null}
-                    >
-                        <Dragger
-                            fileList={fileList}
-                            multiple={true}
-                            onChange={(e) => handleChangeUpload(e)}
-                            showUploadList={false}
-                            beforeUpload={() => false}
-                            accept=""
-                        >
-                            {images.length === 0 ? (
-                                <Image
-                                    // onClick={
-                                    //     userName !== "" && passWord !== ""
-                                    //         ? setError(false)
-                                    //         : checkUser
-                                    // }
-                                    preview={false}
-                                    src="https://media.istockphoto.com/id/1392182937/fr/vectoriel/aucune-image-disponible-photo-%C3%A0-venir.jpg?s=612x612&w=0&k=20&c=iJ7Bhi7QRKOmrAFq36r7WOz8B-a5BIj_Fn2iFEgGB8M="
-                                ></Image>
-                            ) :
-                                <>
-                                    <div style={{ height: 700 }}>
-                                        {imagesURL.length > 0 && (
-                                            <Image
-                                                // onClick={
-                                                //     userName !== "" && passWord !== ""
-                                                //         ? setError(false)
-                                                //         : checkUser
-                                                // }
-                                                preview={false}
-                                                src={imagesURL[currentPage - 1]}
-                                            ></Image>
-                                        )}
-                                    </div>
-                                </>
-                            }
-                        </Dragger>
-                    </Col>
-                </Row>
-                <Row>
-                    {numPagesPDF && (
-                        <p
-                            style={{
+            <div style={{ height: "100vh" }}>
+                <div style={{ height: "10vh", backgroundColor: "aqua" }}>
+                    Header
+                </div>
+                <div style={{ height: "10vh", backgroundColor: "pink", marginTop: "10px" }}>
+                    <Row style={{ width: "99%" }}>
+                        <Col span={8}></Col>
+                        <Col span={8} style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "6vh"
+                        }}>
+                            <Space direction="vertical">
+                                <DatePicker style={{ width: 200 }} onChange={onChangeMonth} allowClear={false} picker="year" />
+                            </Space>
+                            <Select
+                                placeholder="Chọn Deal Stage"
+                                style={{
+                                    width: 150,
+                                    marginLeft: 20,
+                                }}
+                                key="type_document1"
+                                allowClear
+                                maxTagCount="responsive"
+                                optionFilterProp="children"
+                                defaultValue={"VBPO Việt Nam"}
+                            // optionLabelProp="data-label"
+                            // getPopupContainer={getPopupContainer}
+                            >
+                                {items.map((item, index) => (
+                                    <Option key={index} value={item}>
+                                        {item}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Col>
+                    </Row>
+                </div>
+                <div style={{ textAlign: "center", height: "75vh", display: "flex", backgroundColor: "red", marginTop: "10px" }}>
+                    <Row style={{ width: "100%" }}>
+                        <Col span={9} style={{ height: "660px" }}>
+                            <Spin spinning={loading} indicator={antIcon} size="large" style={{ height: 660 }}>
+                                <Dragger
+                                    className="uploadFileSK"
+                                    fileList={fileList}
+                                    multiple={false}
+                                    onChange={(e) => handleChangeUpload(e)}
+                                    showUploadList={false}
+                                    beforeUpload={() => false}
+                                    accept=""
+                                    style={{ width: 650, height: 650, background: "none", border: "unset" }}
+
+                                >
+                                    {images.length === 0 ? (
+                                        <Image
+                                            // onClick={
+                                            //     userName !== "" && passWord !== ""
+                                            //         ? setError(false)
+                                            //         : checkUser
+                                            // }
+                                            preview={false}
+
+                                            src="https://media.istockphoto.com/id/1392182937/fr/vectoriel/aucune-image-disponible-photo-%C3%A0-venir.jpg?s=612x612&w=0&k=20&c=iJ7Bhi7QRKOmrAFq36r7WOz8B-a5BIj_Fn2iFEgGB8M="
+                                        ></Image>
+                                    ) :
+                                        <>
+                                            <div style={{ height: 500, width: 600 }}>
+                                                {imagesURL.length > 0 && (
+                                                    <Image
+                                                        // onClick={
+                                                        //     userName !== "" && passWord !== ""
+                                                        //         ? setError(false)
+                                                        //         : checkUser
+                                                        // }
+                                                        preview={false}
+                                                        height={650}
+                                                        width={600}
+                                                        style={{ marginLeft: "30px" }}
+                                                        src={imagesURL[currentPage - 1]}
+                                                    ></Image>
+                                                )}
+                                            </div>
+                                        </>
+                                    }
+                                </Dragger>
+                            </Spin>
+                            <Row style={{
                                 alignItems: "center",
                                 display: "flex",
                                 justifyContent: "center",
-                            }}
-                        >
-                            {imagesURL.length > 0 ? (
-                                <>
-                                    <Tooltip placement="topLeft" title="Previous">
-                                        <Button
-                                            type="primary"
-                                            shape="round"
-                                            icon={<VerticalRightOutlined />}
-                                            size="small"
-                                            onClick={handlePreviousPage}
-                                            disabled={currentPage === 1}
-                                        />
-                                    </Tooltip>
-                                    &nbsp;&nbsp; {currentPage}/{numPagesPDF} &nbsp;&nbsp;
-                                    <Tooltip placement="topLeft" title="Next">
-                                        <Button
-                                            type="primary"
-                                            shape="round"
-                                            icon={<VerticalLeftOutlined />}
-                                            size="small"
-                                            onClick={handleNextPage}
-                                            disabled={currentPage === numPagesPDF}
-                                        />
-                                    </Tooltip>
-                                </>
-                            ) : null}
-                        </p>
-                    )}
-                </Row>
+                            }}>
+                                {numPagesPDF && (
+                                    <p
+
+                                    >
+                                        {imagesURL.length > 0 ? (
+                                            <>
+                                                <Tooltip placement="topLeft" title="Previous">
+                                                    <Button
+                                                        type="primary"
+                                                        shape="round"
+                                                        icon={<VerticalRightOutlined />}
+                                                        size="small"
+                                                        onClick={handlePreviousPage}
+                                                        disabled={currentPage === 1}
+                                                    />
+                                                </Tooltip>
+                                                &nbsp;&nbsp; {currentPage}/{numPagesPDF} &nbsp;&nbsp;
+                                                <Tooltip placement="topLeft" title="Next">
+                                                    <Button
+                                                        type="primary"
+                                                        shape="round"
+                                                        icon={<VerticalLeftOutlined />}
+                                                        size="small"
+                                                        onClick={handleNextPage}
+                                                        disabled={currentPage === numPagesPDF}
+                                                    />
+                                                </Tooltip>
+                                            </>
+                                        ) : null}
+                                    </p>
+                                )}
+                            </Row>
+                        </Col>
+                        <Col span={15}>
+                            <Table className='table-in-input' columns={columns} dataSource={data} style={{ marginRight: "3%", height: "500px" }} pagination={false} />
+                        </Col>
+                    </Row>
+                </div>
             </div>
 
 
